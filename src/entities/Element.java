@@ -1,49 +1,65 @@
 package entities;
 
+import se.mau.DA343A.VT25.assignment1.AirQualityApp;
+import se.mau.DA343A.VT25.assignment1.Direction;
+import se.mau.DA343A.VT25.assignment1.ImageResources;
+
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public abstract class Element implements Move,IPollution{
     Random random = new Random();
     private String name;
     private double pollutionValue;
-     int x;
-     int y;
+     private int x;
+     private int y;
      private int howManyGridToMove;
-    public Element(int x, int y, double pollutionValue, int howManyGridToMove) {
+     private BufferedImage icon;
+
+    public Element(int x, int y, double pollutionValue, int howManyGridToMove,BufferedImage icon ) {
         this.x = x;
         this.y = y;
         this.pollutionValue = pollutionValue;
         this.howManyGridToMove = howManyGridToMove;
+        this.icon = icon;
     }
 
-    public void move(){
-        int newX = x;
-        int newY = y;
-        int direction = random.nextInt(4);
+    public String getName() {
+        return name;
+    }
+
+    public int getHowManyGridToMove() {
+        return howManyGridToMove;
+    }
+
+    public BufferedImage getIcon() {
+        return icon;
+    }
+
+    public void move(Direction direction){
         switch (direction){
-            case 0 -> newY -= howManyGridToMove;
-            case 1 -> newY += howManyGridToMove;
-            case 2 -> newX += howManyGridToMove;
-            case 3 -> newX -= howManyGridToMove;
+            case Direction.EAST : setX(x+howManyGridToMove);
+            case Direction.NORTH: setY(y+howManyGridToMove);
+            case Direction.WEST: setX(x-howManyGridToMove);
+            case Direction.SOUTH: setY(y-howManyGridToMove);
         }
-        checkBoundries(newX,newY,x,y);
+
 
     }
-    public boolean checkIfWithinBoundries(int newX, int newY, int x, int y) {
-        if (newX >= 0 && newX <  && newY >= 0 && newY < y) {
 
-        }
-    }
-    public void checkBoundries(int newX, int newY, int x, int y) {
-        if (newX >= 0 && newX <  && newY >= 0 && newY < y) {
-            this.x = newX;
-            this.y = newY;
-        }
-    }
 
 
     public int getX() { return x; }
     public int getY() { return y; }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public double getPollutionValue() { return pollutionValue; }
 
 }

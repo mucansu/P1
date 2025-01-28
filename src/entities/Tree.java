@@ -1,5 +1,7 @@
 package entities;
 
+import se.mau.DA343A.VT25.assignment1.Direction;
+
 public class Tree extends Element{
 
 
@@ -12,7 +14,7 @@ public class Tree extends Element{
 
     }
     @Override
-    public void move(){
+    public void move(Direction direction){
 
     }
 }
