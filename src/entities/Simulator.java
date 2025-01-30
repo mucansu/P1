@@ -5,6 +5,7 @@ import se.mau.DA343A.VT25.assignment1.Direction;
 import se.mau.DA343A.VT25.assignment1.MovedOutOfGridException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -20,17 +21,21 @@ public class Simulator {
         return elements;
     }
     public void simulate() throws MovedOutOfGridException {
+        List<Element> toRemove = new ArrayList<>();
         for (Element element : elements){
             if (element.isMovable()){
                 try {
                     moveToRandomDirection(element);
+
                 } catch (MovedOutOfGridException e) {
-                    System.out.println(element.getName() + " moved out of bounds: " + element.getName());
+                    System.out.println(e.getMessage());
+                    toRemove.add(element);
                 }
             }
 
         }
         System.out.println("List size: " + elements.size());
+        elements.removeAll(toRemove);
     }
     public void addElement(Element element){
 
@@ -41,8 +46,9 @@ public class Simulator {
        Direction direction = generateRandomDirection();
 
         if (!checkBoundries(element,direction)){
-            elements.remove(element);
-            throw new MovedOutOfGridException("Element moved out of bounds: " + element.getName());
+
+            throw new MovedOutOfGridException();
+
         }
         else {
 
