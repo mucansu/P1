@@ -9,7 +9,7 @@ public class Car extends Element{
 
     ImageResources imageResources;
     public Car(int x, int y) {
-        super("Car",x, y, 5,1);
+        super("Car",x, y, 50,1);
 
     }
     @Override

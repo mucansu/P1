@@ -10,10 +10,12 @@ import java.util.Random;
 public class P1 extends AirQualityApp{
     private List<Element> elements;
     private Random random = new Random();
+    private double[][] pollutionGrid;
 
     public P1(String[] elementSelectorTypeNames, BufferedImage mapImage) {
         super(elementSelectorTypeNames, mapImage);
         this.elements = new ArrayList<>();
+        this.pollutionGrid = new double[GRID_SIZE][GRID_SIZE];
     }
 
 
@@ -71,9 +73,10 @@ public class P1 extends AirQualityApp{
             case "bike" -> elements.add(new Bike(x, y));
             case "bus" -> elements.add(new Bus(x, y));
             case "tree" -> elements.add(new Tree(x, y));
-
         }
+            updatePollutionGrid();
     }
+
     public void simulate() throws MovedOutOfGridException {
         List<Element> toRemove = new ArrayList<>();
         for (Element element : elements){
@@ -123,5 +126,22 @@ public class P1 extends AirQualityApp{
             default -> false;
         };
     }
+    private void updatePollutionGrid() {
 
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                pollutionGrid[i][j] = 0;
+            }
+        }
+
+
+        for (Element element : elements) {
+            int x = element.getX();
+            int y = element.getY();
+            if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
+                pollutionGrid[y][x] += element.getPollutionValue();
+                setPollution(y, x, pollutionGrid[y][x]);
+            }
+        }
+    }
 }
