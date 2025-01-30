@@ -19,6 +19,6 @@ public class Airplane extends Element {
 
     @Override
     public BufferedImage getIcon() {
-        return new ImageResources().getFactoryImage();
+        return new ImageResources().getTrainImage();
     }
 }

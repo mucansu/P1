@@ -40,7 +40,8 @@ public abstract class Element implements Move,IPollution{
     }
 
     public BufferedImage getIcon() {
-        return icon;
+        System.err.println("No icon set for " + name);
+        return new ImageResources().getElScooterImage();
     }
 
     public boolean isMovable() {
@@ -76,5 +77,6 @@ public abstract class Element implements Move,IPollution{
     }
 
     public double getPollutionValue() { return pollutionValue; }
+
 
 }

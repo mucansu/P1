@@ -1,5 +1,5 @@
 package entities;
-
+/*
 import se.mau.DA343A.VT25.assignment1.AirQualityApp;
 import se.mau.DA343A.VT25.assignment1.Direction;
 import se.mau.DA343A.VT25.assignment1.MovedOutOfGridException;
@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class Simulator {
+public class Simulator{
     Random random = new Random();
     private List<Element> elements;
 
@@ -34,8 +34,8 @@ public class Simulator {
             }
 
         }
-        System.out.println("List size: " + elements.size());
         elements.removeAll(toRemove);
+        System.out.println("List size: " + elements.size());
     }
     public void addElement(Element element){
 
@@ -47,7 +47,7 @@ public class Simulator {
 
         if (!checkBoundries(element,direction)){
 
-            throw new MovedOutOfGridException();
+            throw new MovedOutOfGridException(element.getName() + " moved out of bounds at: " + element.getX() + ", " + element.getY());
 
         }
         else {
@@ -76,3 +76,4 @@ public class Simulator {
         };
     }
 }
+*/
