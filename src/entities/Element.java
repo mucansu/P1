@@ -4,6 +4,7 @@ import se.mau.DA343A.VT25.assignment1.AirQualityApp;
 import se.mau.DA343A.VT25.assignment1.Direction;
 import se.mau.DA343A.VT25.assignment1.ImageResources;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
@@ -14,15 +15,21 @@ public abstract class Element implements Move,IPollution{
      private int x;
      private int y;
      private int howManyGridToMove;
-     private BufferedImage icon;
+     BufferedImage icon;
 
-    public Element(int x, int y, double pollutionValue, int howManyGridToMove,BufferedImage icon ) {
+     private boolean isMovable;
+
+    public Element(String name,int x, int y, double pollutionValue, int howManyGridToMove ) {
         this.x = x;
         this.y = y;
         this.pollutionValue = pollutionValue;
         this.howManyGridToMove = howManyGridToMove;
-        this.icon = icon;
+        this.name = name;
+        this.isMovable = true;
+
     }
+
+
 
     public String getName() {
         return name;
@@ -36,12 +43,20 @@ public abstract class Element implements Move,IPollution{
         return icon;
     }
 
+    public boolean isMovable() {
+        return isMovable;
+    }
+
+    public void setMovable(boolean movable) {
+        isMovable = movable;
+    }
+
     public void move(Direction direction){
         switch (direction){
-            case Direction.EAST : setX(x+howManyGridToMove);
-            case Direction.NORTH: setY(y+howManyGridToMove);
-            case Direction.WEST: setX(x-howManyGridToMove);
-            case Direction.SOUTH: setY(y-howManyGridToMove);
+            case Direction.EAST : setX(x+howManyGridToMove); break;
+            case Direction.NORTH: setY(y+howManyGridToMove); break;
+            case Direction.WEST: setX(x-howManyGridToMove); break;
+            case Direction.SOUTH: setY(y-howManyGridToMove); break;
         }
 
 

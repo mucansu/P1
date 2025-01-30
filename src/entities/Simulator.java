@@ -4,6 +4,7 @@ import se.mau.DA343A.VT25.assignment1.AirQualityApp;
 import se.mau.DA343A.VT25.assignment1.Direction;
 import se.mau.DA343A.VT25.assignment1.MovedOutOfGridException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -11,25 +12,46 @@ public class Simulator {
     Random random = new Random();
     private List<Element> elements;
 
+    public Simulator() {
+        this.elements = new ArrayList<>();
+    }
+
     public List<Element> getElements() {
         return elements;
     }
     public void simulate() throws MovedOutOfGridException {
         for (Element element : elements){
+            if (element.isMovable()){
+                try {
+                    moveToRandomDirection(element);
+                } catch (MovedOutOfGridException e) {
+                    System.out.println(element.getName() + " moved out of bounds: " + element.getName());
+                }
+            }
 
-            moveToRandomDirection(element);
         }
+        System.out.println("List size: " + elements.size());
+    }
+    public void addElement(Element element){
+
+        elements.add(element);
+
     }
     public void moveToRandomDirection(Element element) throws MovedOutOfGridException {
        Direction direction = generateRandomDirection();
 
-        if (checkBoundries(element,direction)){
-            element.move(direction);
+        if (!checkBoundries(element,direction)){
+            elements.remove(element);
+            throw new MovedOutOfGridException("Element moved out of bounds: " + element.getName());
         }
         else {
 
-        elements.remove(element);
-        throw new MovedOutOfGridException();
+            element.move(direction);
+            System.out.println(element.getName() + " moved to random direction : " + direction);
+            System.out.println("coordinates : " + element.getX() + " , " + element.getY());
+
+
+
         }
     }
     public Direction generateRandomDirection(){
@@ -39,13 +61,12 @@ public class Simulator {
     }
 
     private boolean checkBoundries(Element element, Direction direction) {
-        switch (direction){
-            case Direction.EAST : return !(element.getX()+element.getHowManyGridToMove()<=AirQualityApp.GRID_SIZE);
-            case Direction.NORTH: return !(element.getY()+element.getHowManyGridToMove()<=AirQualityApp.GRID_SIZE);
-            case Direction.WEST: return !(element.getX()-element.getHowManyGridToMove()>=AirQualityApp.GRID_SIZE);
-            case Direction.SOUTH: return !(element.getY()-element.getHowManyGridToMove()>=AirQualityApp.GRID_SIZE);
-        }
-
-        return true;
+        return switch (direction) {
+            case Direction.EAST -> (element.getX() + element.getHowManyGridToMove()) < AirQualityApp.GRID_SIZE;
+            case Direction.NORTH -> (element.getY() - element.getHowManyGridToMove()) >= 0;
+            case Direction.WEST -> (element.getX() - element.getHowManyGridToMove()) >= 0;
+            case Direction.SOUTH -> (element.getY() + element.getHowManyGridToMove()) < AirQualityApp.GRID_SIZE;
+            default -> false;
+        };
     }
 }
