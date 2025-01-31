@@ -36,8 +36,7 @@ public class P1 extends AirQualityApp{
     protected void mouseClicked(int i, int i1) {
        String type = getSelectedElementType();
        createElement(type,i1,i);
-        System.out.println("mouse clicked : " +  i + " , " + i1);
-        System.out.println(type);
+
         //elementIconsToPaint();
         repaint();
     }
@@ -66,6 +65,15 @@ public class P1 extends AirQualityApp{
     }
 
     protected void createElement(String type,int x,int y){
+        if (type.equals("Tree")) {
+            if (containsNonMovableElement(x, y)) {
+
+                return;
+            }
+
+        }
+
+
 
 
         switch (type.toLowerCase()) {
@@ -73,14 +81,27 @@ public class P1 extends AirQualityApp{
             case "bike" -> elements.add(new Bike(x, y));
             case "bus" -> elements.add(new Bus(x, y));
             case "tree" -> elements.add(new Tree(x, y));
+
         }
-            updatePollutionGrid();
+        System.out.println("mouse clicked : " +  x + " , " + y);
+        System.out.println(elements.getLast().getName());
+        updatePollutionGrid();
+    }
+    public boolean containsNonMovableElement(int x, int y) {
+        for (Element element : elements) {
+            if (!element.isMovable() && element.getX() == x && element.getY() == y) {
+                return true; // Burada zaten hareket etmeyen bir element var!
+            }
+        }
+        return false;
     }
 
     public void simulate() throws MovedOutOfGridException {
         List<Element> toRemove = new ArrayList<>();
         for (Element element : elements){
+
             if (element.isMovable()){
+
                 try {
                     moveToRandomDirection(element);
 
@@ -92,7 +113,9 @@ public class P1 extends AirQualityApp{
 
         }
         elements.removeAll(toRemove);
+        updatePollutionGrid();
         System.out.println("List size: " + elements.size());
+        repaint();
 
     }
     public void moveToRandomDirection(Element element) throws MovedOutOfGridException {
@@ -127,19 +150,39 @@ public class P1 extends AirQualityApp{
         };
     }
     private void updatePollutionGrid() {
-
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                pollutionGrid[i][j] = 0;
+        double[][] newPollutionGrid = new double[GRID_SIZE][GRID_SIZE];
+        for (int y = 0; y < GRID_SIZE; y++) {
+            for (int x = 0; x < GRID_SIZE; x++) {
+                pollutionGrid[y][x] = 0.0;
             }
         }
 
-
+        // 🔥 2️⃣ Tüm elementlerin pollution değerlerini ekle
         for (Element element : elements) {
             int x = element.getX();
             int y = element.getY();
             if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
                 pollutionGrid[y][x] += element.getPollutionValue();
+            }
+        }
+
+        for (int y = 0; y < GRID_SIZE; y++) {
+            for (int x = 0; x < GRID_SIZE; x++) {
+                double sum = pollutionGrid[y][x];
+
+                // Komşuları ekle
+                if (x > 0) sum += pollutionGrid[y][x - 1];  // Sol
+                if (x < GRID_SIZE - 1) sum += pollutionGrid[y][x + 1];  // Sağ
+                if (y > 0) sum += pollutionGrid[y - 1][x];  // Yukarı
+                if (y < GRID_SIZE - 1) sum += pollutionGrid[y + 1][x];  // Aşağı
+
+                newPollutionGrid[y][x] = Math.max(0, sum / 5);
+            }
+        }
+        pollutionGrid = newPollutionGrid;
+
+        for (int y = 0; y < GRID_SIZE; y++) {
+            for (int x = 0; x < GRID_SIZE; x++) {
                 setPollution(y, x, pollutionGrid[y][x]);
             }
         }

@@ -9,8 +9,8 @@ public class Tree extends Element{
 
 
     public Tree(int x, int y) {
-        super("Tree",x, y, -5, 0);
-        setMovable(false);
+        super("Tree",x, y, -25, 0);
+
     }
 
     @Override
@@ -25,6 +25,11 @@ public class Tree extends Element{
     @Override
     public void move(Direction direction) {
 
+    }
+
+    @Override
+    public boolean isMovable() {
+        return false;
     }
 
 }

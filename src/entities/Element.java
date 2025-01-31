@@ -44,9 +44,7 @@ public abstract class Element implements Move,IPollution{
         return new ImageResources().getElScooterImage();
     }
 
-    public boolean isMovable() {
-        return isMovable;
-    }
+
 
     public void setMovable(boolean movable) {
         isMovable = movable;
@@ -77,6 +75,7 @@ public abstract class Element implements Move,IPollution{
     }
 
     public double getPollutionValue() { return pollutionValue; }
+    public abstract boolean isMovable();
 
 
 }

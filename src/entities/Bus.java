@@ -8,7 +8,7 @@ public class Bus extends Element{
 
 
     public Bus(int x, int y) {
-        super("Bus",x, y, 0.1, 2);
+        super("Bus",x, y, 20, 2);
     }
 
     @Override
@@ -18,5 +18,10 @@ public class Bus extends Element{
     @Override
     public BufferedImage getIcon() {
         return new ImageResources().getBusImage();
+    }
+
+    @Override
+    public boolean isMovable() {
+        return true;
     }
 }

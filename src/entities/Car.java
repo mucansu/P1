@@ -16,6 +16,17 @@ public class Car extends Element{
     public BufferedImage getIcon() {
         return new ImageResources().getCarImage();
     }
+
+    @Override
+    public double getPollutionValue() {
+        return 50;
+    }
+
+    @Override
+    public boolean isMovable() {
+        return true;
+    }
+
     @Override
     public void calculatePollution() {
 
