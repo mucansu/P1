@@ -8,7 +8,7 @@ public class Airplane extends Element {
 
 
     public Airplane(int x, int y) {
-        super("Bike",x, y, 10, 5);
+        super("Airplane",x, y, 100, 5);
     }
 
     @Override
@@ -18,11 +18,16 @@ public class Airplane extends Element {
 
     @Override
     public BufferedImage getIcon() {
-        return new ImageResources().getTrainImage();
+        return new ImageResources().getElScooterImage();
     }
 
     @Override
     public boolean isMovable() {
         return true;
+    }
+
+    @Override
+    public boolean isLandOnly() {
+        return false;
     }
 }

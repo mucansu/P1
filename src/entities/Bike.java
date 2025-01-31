@@ -25,4 +25,9 @@ public class Bike extends Element {
     public boolean isMovable() {
         return true;
     }
+
+    @Override
+    public boolean isLandOnly() {
+        return true;
+    }
 }

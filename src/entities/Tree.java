@@ -32,4 +32,9 @@ public class Tree extends Element{
         return false;
     }
 
+    @Override
+    public boolean isLandOnly() {
+        return true;
+    }
+
 }

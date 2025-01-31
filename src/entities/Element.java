@@ -76,6 +76,7 @@ public abstract class Element implements Move,IPollution{
 
     public double getPollutionValue() { return pollutionValue; }
     public abstract boolean isMovable();
+    public abstract boolean isLandOnly();
 
 
 }

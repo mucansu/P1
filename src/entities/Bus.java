@@ -24,4 +24,9 @@ public class Bus extends Element{
     public boolean isMovable() {
         return true;
     }
+
+    @Override
+    public boolean isLandOnly() {
+        return true;
+    }
 }

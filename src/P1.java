@@ -11,11 +11,13 @@ public class P1 extends AirQualityApp{
     private List<Element> elements;
     private Random random = new Random();
     private double[][] pollutionGrid;
+    private IsLand island;
 
     public P1(String[] elementSelectorTypeNames, BufferedImage mapImage) {
         super(elementSelectorTypeNames, mapImage);
         this.elements = new ArrayList<>();
         this.pollutionGrid = new double[GRID_SIZE][GRID_SIZE];
+        this.island = new IsLand();
     }
 
 
@@ -64,33 +66,40 @@ public class P1 extends AirQualityApp{
         return icons;
     }
 
+    public boolean isOnLand(int x, int y) {
+        return island.isLand(y, x); // isLand() metodu row, col bekliyor
+    }
     protected void createElement(String type,int x,int y){
-        if (type.equals("Tree")) {
-            if (containsNonMovableElement(x, y)) {
-
-                return;
-            }
-
+        Element newElement = null;
+       newElement =  switch (type.toLowerCase()) {
+            case "car" -> new Car(x, y);
+            case "bike" -> new Bike(x, y);
+            case "bus" -> new Bus(x, y);
+            case "tree" -> new Tree(x, y);
+            case "airplane" -> new Airplane(x, y);
+           default -> null;
+        };
+        if (newElement.isLandOnly() && !isOnLand(x, y)) {
+            System.out.println("⚠️ Bu element sadece kara üzerinde oluşturulabilir: " + type);
+            return;
         }
 
-
-
-
-        switch (type.toLowerCase()) {
-            case "car" -> elements.add(new Car(x, y));
-            case "bike" -> elements.add(new Bike(x, y));
-            case "bus" -> elements.add(new Bus(x, y));
-            case "tree" -> elements.add(new Tree(x, y));
-
+        if (!newElement.isMovable() && containsNonMovableElement(x, y)) {
+            System.out.println("⚠️ Bu koordinatta zaten bir hareket etmeyen element var! Tekrar eklenemez.");
+            return;
         }
         System.out.println("mouse clicked : " +  x + " , " + y);
-        System.out.println(elements.getLast().getName());
+        elements.add(newElement);
+        if (!elements.isEmpty()) {
+            System.out.println("Element added: " + elements.getLast().getName());
+        }
         updatePollutionGrid();
+        repaint();
     }
     public boolean containsNonMovableElement(int x, int y) {
         for (Element element : elements) {
             if (!element.isMovable() && element.getX() == x && element.getY() == y) {
-                return true; // Burada zaten hareket etmeyen bir element var!
+                return true;
             }
         }
         return false;
@@ -157,7 +166,7 @@ public class P1 extends AirQualityApp{
             }
         }
 
-        // 🔥 2️⃣ Tüm elementlerin pollution değerlerini ekle
+
         for (Element element : elements) {
             int x = element.getX();
             int y = element.getY();
@@ -170,11 +179,11 @@ public class P1 extends AirQualityApp{
             for (int x = 0; x < GRID_SIZE; x++) {
                 double sum = pollutionGrid[y][x];
 
-                // Komşuları ekle
-                if (x > 0) sum += pollutionGrid[y][x - 1];  // Sol
-                if (x < GRID_SIZE - 1) sum += pollutionGrid[y][x + 1];  // Sağ
-                if (y > 0) sum += pollutionGrid[y - 1][x];  // Yukarı
-                if (y < GRID_SIZE - 1) sum += pollutionGrid[y + 1][x];  // Aşağı
+
+                if (x > 0) sum += pollutionGrid[y][x - 1];
+                if (x < GRID_SIZE - 1) sum += pollutionGrid[y][x + 1];
+                if (y > 0) sum += pollutionGrid[y - 1][x];
+                if (y < GRID_SIZE - 1) sum += pollutionGrid[y + 1][x];
 
                 newPollutionGrid[y][x] = Math.max(0, sum / 5);
             }

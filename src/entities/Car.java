@@ -28,6 +28,11 @@ public class Car extends Element{
     }
 
     @Override
+    public boolean isLandOnly() {
+        return true;
+    }
+
+    @Override
     public void calculatePollution() {
 
     }
