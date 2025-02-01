@@ -39,7 +39,6 @@ public class P1 extends AirQualityApp{
        String type = getSelectedElementType();
        createElement(type,i1,i);
 
-        //elementIconsToPaint();
         repaint();
     }
 
@@ -67,7 +66,7 @@ public class P1 extends AirQualityApp{
     }
 
     public boolean isOnLand(int x, int y) {
-        return island.isLand(y, x); // isLand() metodu row, col bekliyor
+        return island.isLand(y, x);
     }
     protected void createElement(String type,int x,int y){
         Element newElement = null;
@@ -80,19 +79,17 @@ public class P1 extends AirQualityApp{
            default -> null;
         };
         if (newElement.isLandOnly() && !isOnLand(x, y)) {
-            System.out.println("⚠️ Bu element sadece kara üzerinde oluşturulabilir: " + type);
+            System.out.println("Cant place on sea " + type);
             return;
         }
 
         if (!newElement.isMovable() && containsNonMovableElement(x, y)) {
-            System.out.println("⚠️ Bu koordinatta zaten bir hareket etmeyen element var! Tekrar eklenemez.");
+            System.out.println("There is already non-movable element here");
             return;
         }
         System.out.println("mouse clicked : " +  x + " , " + y);
         elements.add(newElement);
-        if (!elements.isEmpty()) {
-            System.out.println("Element added: " + elements.getLast().getName());
-        }
+        System.out.println("Element added: " + elements.getLast().getName());
         updatePollutionGrid();
         repaint();
     }
@@ -127,37 +124,59 @@ public class P1 extends AirQualityApp{
         repaint();
 
     }
-    public void moveToRandomDirection(Element element) throws MovedOutOfGridException {
-        Direction direction = generateRandomDirection();
-
-        if (!checkBoundaries(element,direction)){
-
-            throw new MovedOutOfGridException(element.getName() + " moved out of bounds at: " + element.getX() + ", " + element.getY());
-
+    public void moveToRandomDirection(Element element)throws MovedOutOfGridException {
+        if (!element.isMovable()) {
+            return;
         }
-        else {
 
-            element.move(direction);
-            System.out.println(element.getName() + " moved to random direction : " + direction);
-            System.out.println("coordinates : " + element.getX() + " , " + element.getY());
-
-
-
+        int tries = 4;
+        while (tries > 0) {
+            Direction direction = generateRandomDirection();
+            if (canMoveTo(element, direction)) {
+                element.move(direction);
+                System.out.println(element.getName() + " moved to random direction : " + direction);
+                System.out.println("coordinates : " + element.getX() + " , " + element.getY());
+                return;
+            }
+            tries--;
         }
+
+        System.out.println(element.getName() + " could not move. No valid direction found.");
     }
+
+
     public Direction generateRandomDirection() {
         return Direction.values()[random.nextInt(Direction.values().length)];
     }
+    public boolean canMoveTo(Element element, Direction direction) {
 
-    public boolean checkBoundaries(Element element, Direction direction) {
-        return switch (direction) {
-            case EAST -> (element.getX() + element.getHowManyGridToMove()) < AirQualityApp.GRID_SIZE;
-            case NORTH -> (element.getY() - element.getHowManyGridToMove()) >= 0;
-            case WEST -> (element.getX() - element.getHowManyGridToMove()) >= 0;
-            case SOUTH -> (element.getY() + element.getHowManyGridToMove()) < AirQualityApp.GRID_SIZE;
-            default -> false;
-        };
+        int currentX = element.getX();
+        int currentY = element.getY();
+        int step = element.getHowManyGridToMove();
+
+
+        int newX = currentX;
+        int newY = currentY;
+
+        switch (direction) {
+            case EAST -> newX = currentX + step;
+            case WEST -> newX = currentX - step;
+            case NORTH -> newY = currentY - step;
+            case SOUTH -> newY = currentY + step;
+        }
+
+
+        if (newX < 0 || newX >= GRID_SIZE || newY < 0 || newY >= GRID_SIZE) {
+            return false;
+        }
+
+        if (element.isLandOnly() && !isOnLand(newY, newX)) {
+            return false;
+        }
+
+        return true;
     }
+
     private void updatePollutionGrid() {
         double[][] newPollutionGrid = new double[GRID_SIZE][GRID_SIZE];
         for (int y = 0; y < GRID_SIZE; y++) {

@@ -18,6 +18,7 @@ public abstract class Element implements Move,IPollution{
      BufferedImage icon;
 
      private boolean isMovable;
+     private boolean isLandOnly;
 
     public Element(String name,int x, int y, double pollutionValue, int howManyGridToMove ) {
         this.x = x;
@@ -26,7 +27,7 @@ public abstract class Element implements Move,IPollution{
         this.howManyGridToMove = howManyGridToMove;
         this.name = name;
         this.isMovable = true;
-
+        this.isLandOnly = true;
     }
 
 
